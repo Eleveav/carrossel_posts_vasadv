@@ -1,80 +1,70 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Carrossel de Posts</title>
-  <style>
-    body {
-      font-family: 'Questrial', sans-serif;
-      margin: 0;
-      background-color: transparent;
-    }
-    .carousel {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      gap: 16px;
-      padding: 16px;
-      -webkit-overflow-scrolling: touch;
-    }
-    .post {
-      flex: 0 0 auto;
-      width: 300px;
-      background: #fff;
-      border-radius: 16px;
-      padding: 16px;
-      scroll-snap-align: start;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    .post img {
-      width: 100%;
-      border-radius: 10px;
-    }
-    .post .date {
-      color: #7B97B7;
-      font-size: 13px;
-      margin-top: 8px;
-    }
-    @media (max-width: 768px) {
-      .carousel {
-        display: block;
-      }
-      .post {
-        width: 100%;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrossel de Posts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 16px;
+            padding: 16px;
+        }
+        .post {
+            flex: 0 0 auto;
+            width: 300px;
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .post img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .post h3 {
+            font-size: 16px;
+            color: #004FB0;
+        }
+        .post .date {
+            font-size: 12px;
+            color: #7B97B7;
+            margin-bottom: 8px;
+        }
+    </style>
 </head>
 <body>
-  <div class="carousel" id="carousel"></div>
+    <div class="carousel" id="carousel">
+        <!-- Conteúdo do carrossel -->
+    </div>
 
-  <script>
-    const postsCount = window.innerWidth <= 768 ? 1 : 4; // 1 post no celular, 4 nos outros dispositivos
-
-    fetch('https://linkedin-proxy.onrender.com/api/posts')
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById('carousel');
-        const postsToShow = data.slice(0, postsCount);
-
-        postsToShow.forEach(post => {
-          const el = document.createElement('div');
-          el.className = 'post';
-          el.innerHTML = `
-            <a href="https://www.linkedin.com/posts/${post.id}" target="_blank">
-              <img src="${post.image}" alt="${post.title}" />
-            </a>
-            <div class="date">${new Date(post.date).toLocaleDateString()}</div>
-          `;
-          container.appendChild(el);
-        });
-      })
-      .catch(err => {
-        console.error('Erro ao carregar posts:', err);
-        document.getElementById('carousel').innerText = 'Erro ao carregar posts';
-      });
-  </script>
+    <script>
+        // Aqui você pode colocar o código para carregar os posts.
+        fetch('https://linkedin-proxy.onrender.com/api/posts')
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('carousel');
+                data.slice(0, 4).forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.classList.add('post');
+                    postElement.innerHTML = `
+                        <div class="date">${new Date(post.date).toLocaleDateString()}</div>
+                        <h3>${post.title}</h3>
+                        <img src="${post.image}" alt="${post.title}">
+                    `;
+                    container.appendChild(postElement);
+                });
+            })
+            .catch(error => {
+                console.error("Erro ao carregar os posts:", error);
+            });
+    </script>
 </body>
 </html>
